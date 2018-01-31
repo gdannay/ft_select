@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 20:33:51 by gdannay           #+#    #+#             */
-/*   Updated: 2018/01/31 17:58:45 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/01/31 18:13:41 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,37 +155,41 @@ void	highlight(t_arg *arg, int line, struct winsize size)
 	tputs(rc, 1, &ft_putint);
 }
 
-t_arg	*manage_arrow(t_arg *arg, int line)
+t_arg	*manage_arrow(t_arg *arg, int nb, int elm)
 {
 	int c = 0;
 	int	i;
 
 	i = 0;
-	if (nb_args(arg, 1) % line == 0)
-		line++;
 	while (arg[i].name && arg[i].high == 0)
 		i++;
 	arg[i].high = 0;
 	ft_getch();
 	if ((c = ft_getch()) == 'A')
 	{
-		if (i > nb_args(arg, 1) / line)
-			arg[i - nb_args(arg, 1) / line - 1].high = 1;
-		else if (nb_args(arg, 1) % (nb_args(arg, 1) / line + 1) == 0)
-			arg[nb_args(arg, 1) - nb_args(arg, 1) / line - 1 + i].high = 1;
-		else if (nb_args(arg, 1) % (nb_args(arg, 1) / line + 1) > i)
-			arg[nb_args(arg, 1) - nb_args(arg, 1) % (nb_args(arg, 1) / line + 1) + i].high = 1;
+		if (i > elm)
+			arg[i - elm].high = 1;
+		else if (nb % elm == 0)
+		{
+			dprintf(1, "ICI");
+			arg[nb - elm + i].high = 1;
+		}
+		else if (nb % elm > i)
+		{
+			dprintf(1, "ICI2");
+			arg[nb - nb % elm + i].high = 1;
+		}
 		else
-			arg[nb_args(arg, 1) - 1].high = 1;
+			arg[nb - 1].high = 1;
 	}
 	else if (c == 'B')
 	{
-		if (i < nb_args(arg, 1) - (nb_args(arg, 1) / line + 1))
-			arg[i + nb_args(arg, 1) / line + 1].high = 1;
-		else if (nb_args(arg, 1) % (nb_args(arg, 1) / line + 1) == 0)
-			arg[i - nb_args(arg, 1) + nb_args(arg, 1) / line + 1].high = 1;
+		if (i < nb - elm)
+			arg[i + elm].high = 1;
+		else if (nb % elm == 0)
+			arg[i - nb + elm].high = 1;
 		else
-			arg[i % (nb_args(arg, 1) / line + 1)].high = 1;
+			arg[i % elm].high = 1;
 	}
 	else if (c == 'C')
 	{
@@ -197,7 +201,7 @@ t_arg	*manage_arrow(t_arg *arg, int line)
 	else if (c == 'D')
 	{
 		if (i == 0)
-			arg[nb_args(arg, 1) - 1].high = 1;
+			arg[nb - 1].high = 1;
 		else
 			arg[i - 1].high = 1;
 	}
@@ -223,7 +227,7 @@ struct winsize	display_args(struct winsize size, int *key, t_arg *arg, int *line
 			return (size);
 	}
 	if (*key == 27)
-		manage_arrow(arg, *line);
+		manage_arrow(arg, nb_args(arg, 1), nb_args(arg, 1) / *line - !(nb_args(arg, 1) % *line) + 1);
 	tputs(rc, 1, &ft_putint);
 	tputs(cd, 1, &ft_putint);
 	*line = print_args(arg, tmp);
