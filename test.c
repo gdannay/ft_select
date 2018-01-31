@@ -118,7 +118,7 @@ int main()
 	tputs("Hello, ", 1, &ft_putchar);
 	tputs("world\n lalalala", 1, &ft_putchar);
 	tputs(stendstr, 1, &ft_putchar);
-//	tputs(tgoto(rc, 0, 0), 1, &ft_putchar);
+	tputs(tgoto(rc, 0, 0), 1, &ft_putchar);
 	tputs("LALALALALAL\n", 1 , &ft_putchar);
 	return (0);
 }
