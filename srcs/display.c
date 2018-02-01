@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 20:33:51 by gdannay           #+#    #+#             */
-/*   Updated: 2018/01/31 18:13:41 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/01 18:47:34 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		nb_args(t_arg *arg, int booldel)
 	nb = 0;
 	while (arg[++i].name)
 	{
-		if (booldel || arg[i].del == 0)
+		if (!booldel || arg[i].del == 0)
 			nb++;
 	}
 	return (nb);
@@ -64,27 +64,27 @@ int		print_args(t_arg *arg, struct winsize size)
 	elem = tmp;
 	while (arg[++i].name)
 	{
-		if (i + 1 > tmp && i != 0)
+		if (!arg[i].del && i + 1 > tmp && i != 0)
 		{
 			ft_printf("\n");
 			tmp += elem;
 			line++;
 		}
-		if (prec < size.ws_col && arg[i].select == 1)
+		if (!arg[i].del && prec < size.ws_col && arg[i].select == 1)
 		{
 			tputs(so, 1, &ft_putint);
 			ft_printf("%-*s", prec, arg[i].name);
 			tputs(se, 1, &ft_putint);
 		}
-		else if (arg[i].select == 1)
+		else if (!arg[i].del && arg[i].select == 1)
 		{
 			tputs(so, 1, &ft_putint);
 			ft_printf("%-.*s", size.ws_col, arg[i].name);
 			tputs(se, 1, &ft_putint);
 		}
-		else if (prec < size.ws_col)
+		else if (!arg[i].del && prec < size.ws_col)
 			ft_printf("%-*s", prec, arg[i].name);
-		else
+		else if (!arg[i].del)
 			ft_printf("%-.*s", size.ws_col, arg[i].name);
 		if (line > size.ws_row - 2)
 		{
@@ -126,6 +126,8 @@ void	highlight(t_arg *arg, int line, struct winsize size)
 	char	*nd;
 	int		j;
 	int		k;
+	char			*so = tgetstr("so", NULL);
+	char			*se = tgetstr("se", NULL);
 
 	i = 0;
 	j = 0;
@@ -148,7 +150,19 @@ void	highlight(t_arg *arg, int line, struct winsize size)
 	k *= get_precision(arg);
 	while (--k >= 0)
 		tputs(nd, 1, &ft_putint);
-	if (prec < size.ws_col)
+	if (prec < size.ws_col && arg[i].select == 1)
+	{
+		tputs(so, 1, &ft_putint);
+		ft_printf("%s%-*s%s", tgetstr("us", NULL), prec, arg[i].name, tgetstr("ue", NULL));
+		tputs(se, 1, &ft_putint);
+	}
+	else if (arg[i].select == 1)
+	{
+		tputs(so, 1, &ft_putint);
+		ft_printf("%s%-.*s%s", tgetstr("us", NULL), prec, arg[i].name, tgetstr("ue", NULL));
+		tputs(se, 1, &ft_putint);
+	}
+	else if (prec < size.ws_col)
 		ft_printf("%s%-*s%s", tgetstr("us", NULL), prec, arg[i].name, tgetstr("ue", NULL));
 	else
 		ft_printf("%s%-.*s%s", tgetstr("us", NULL), prec, arg[i].name, tgetstr("ue", NULL));
@@ -163,22 +177,15 @@ t_arg	*manage_arrow(t_arg *arg, int nb, int elm)
 	i = 0;
 	while (arg[i].name && arg[i].high == 0)
 		i++;
-	arg[i].high = 0;
 	ft_getch();
 	if ((c = ft_getch()) == 'A')
 	{
-		if (i > elm)
+		if (i >= elm)
 			arg[i - elm].high = 1;
 		else if (nb % elm == 0)
-		{
-			dprintf(1, "ICI");
 			arg[nb - elm + i].high = 1;
-		}
 		else if (nb % elm > i)
-		{
-			dprintf(1, "ICI2");
 			arg[nb - nb % elm + i].high = 1;
-		}
 		else
 			arg[nb - 1].high = 1;
 	}
@@ -205,6 +212,9 @@ t_arg	*manage_arrow(t_arg *arg, int nb, int elm)
 		else
 			arg[i - 1].high = 1;
 	}
+	else
+		return (arg);
+	arg[i].high = 0;
 	return (arg);
 }
 
@@ -221,10 +231,34 @@ struct winsize	display_args(struct winsize size, int *key, t_arg *arg, int *line
 	while (size.ws_row == tmp.ws_row
 			&& size.ws_col == tmp.ws_col
 			&& (*key = ft_getch()) != 32
-			&& *key != 27)
+			&& *key != 27
+			&& *key != 10
+			&& *key != 127)
 	{
 		if (ioctl(0, TIOCGWINSZ, (char *) &tmp) < 0)
 			return (size);
+	}
+	if (*key == 10)
+	{
+		while (arg[i].name && arg[i].high == 0)
+			i++;
+		if (arg[i].select == 0)
+			arg[i].select = 1;
+		else
+			arg[i].select = 0;
+//		dprintf(1, "ICI = %d %d", i, *key);
+//		while(1);
+	}
+	if (*key == 127)
+	{
+		while (arg[i].name && arg[i].high == 0)
+			i++;
+		arg[i].del = 1;
+		arg[i].high = 0;
+		if (arg[i + 1].name == NULL)
+			arg[0].high = 1;
+		else
+			arg[i + 1].high = 1;
 	}
 	if (*key == 27)
 		manage_arrow(arg, nb_args(arg, 1), nb_args(arg, 1) / *line - !(nb_args(arg, 1) % *line) + 1);

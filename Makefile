@@ -6,7 +6,7 @@
 #    By: gdannay <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/19 18:14:52 by gdannay           #+#    #+#              #
-#    Updated: 2018/01/29 14:53:07 by gdannay          ###   ########.fr        #
+#    Updated: 2018/02/01 10:37:50 by gdannay          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 CFLAGS	=	-Wall -Wextra -Werror -I includes
 
-LFLAGS	=	-L libft -lft -ltermcap -g3 -fsanitize=address
+LFLAGS	=	-L libft -lft -ltermcap
 
 CC		=	gcc
 
