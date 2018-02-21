@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/16 10:03:59 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/16 12:39:27 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/21 11:25:03 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int		init_term(t_term *term)
 		return (-1);
 	ft_printf("\e[?25l");
 	manage_signal(term);
+	term->key = 0;
 	return (0);
 }
 
@@ -64,4 +65,15 @@ int		init_arg(int ac, char **av, t_term *term)
 	term->arg[0].high = 1;
 	term->nb = ac - 1;
 	return (1);
+}
+
+void	free_term(t_term *term)
+{
+	int i;
+
+	i = -1;
+	while (term->arg[++i].name)
+		ft_strdel(&(term->arg[i].name));
+	free(term->arg);
+	free(term);
 }

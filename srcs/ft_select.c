@@ -6,11 +6,41 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 18:20:45 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/16 12:33:01 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/21 11:31:45 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_select.h"
+
+int			ft_getch()
+{
+	int buf;
+
+	buf = 0;
+	if (read(0, &buf, 1) < 0)
+		return (-1);
+	return (buf);
+}
+
+int			ft_putint(int c)
+{
+	write(1, &c, 1);
+	return (0);
+}
+
+static void	manage_keys(t_term *term)
+{
+	print_args(term);
+	while (term->key != SPACE && term->key != ARROW
+			&& term->key != ENTER && term->key != DEL)
+		term->key = ft_getch();
+	if (term->key == SPACE)
+		space(term);
+	else if (term->key == DEL)
+		del(term);
+	else if (term->key == ARROW)
+		arrow(term);
+}
 
 int				main(int ac, char **av)
 {
@@ -22,13 +52,10 @@ int				main(int ac, char **av)
 				|| init_term(term) == -1
 				|| !(init_arg(ac, av, term)))
 			return (-1);
-		while (term->key != 10 && (term->key = ft_getch()) != 10)
-		{
-			if (display_args(term) == -1)
-				return (-1);
-		}
+		while (term->key != ECHAP && term->key != ENTER)
+			manage_keys(term);
 		default_term(term);
-		free_all(term);
+		free_term(term);
 	}
 	return (0);
 }

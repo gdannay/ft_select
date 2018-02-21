@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 17:37:40 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/21 09:52:56 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/21 11:27:49 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static t_term	*cp_term;
 
-void	cont(int signum)
+static void		cont(int signum)
 {
 	char	*cd;
 
@@ -22,23 +22,11 @@ void	cont(int signum)
 	cd = tgetstr("cd", NULL);
 	tputs(cd, 1, &ft_putint);
 	init_term(cp_term);
-	cp_term->line = print_args(cp_term->arg, cp_term->size);
+	print_args(cp_term);
 	signal(SIGTSTP, &suspend);
 }
 
-void	free_all(t_term *term)
-{
-	int i;
-
-	i = -1;
-	while (term->arg[++i].name)
-		ft_strdel(&(term->arg[i].name));
-	free(term->arg);
-	free(term);
-}
-
-
-void	quit(int signum)
+static void		quit(int signum)
 {
 	char	*cd;
 
@@ -46,11 +34,11 @@ void	quit(int signum)
 	cd = tgetstr("cd", NULL);
 	tputs(cd, 1, &ft_putint);
 	default_term(cp_term);
-	free_all(cp_term);
+	free_term(cp_term);
 	exit(1);
 }
 
-void	suspend(int signum)
+void			suspend(int signum)
 {
 	char	*cd;
 
@@ -61,6 +49,16 @@ void	suspend(int signum)
 	signal(SIGTSTP, SIG_DFL);
 	ioctl(0, TIOCSTI, "\032");
 	signal(SIGCONT, &cont);
+}
+
+static void		winchange(int signum)
+{
+	(void)signum;
+
+	if (!isatty(STDOUT_FILENO)
+		|| ioctl(0, TIOCGWINSZ, &(cp_term->size)) == -1)
+		return ;
+	print_args(cp_term);
 }
 
 void			manage_signal(t_term *term)
@@ -75,6 +73,8 @@ void			manage_signal(t_term *term)
 			signal(SIGTSTP, &suspend);
 		else if (i == SIGCONT)
 			signal(SIGCONT, &cont);
+		else if (i == SIGWINCH)
+			signal(SIGWINCH, &winchange);
 		else
 			signal(i, &quit);
 	}
