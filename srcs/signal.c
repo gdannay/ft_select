@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/15 17:37:40 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/21 11:27:49 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/21 20:01:39 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ void			suspend(int signum)
 
 	(void)signum;
 	cd = tgetstr("cd", NULL);
-	tputs(cd, 1, &ft_putint);
-	default_term(cp_term);
+	tputs(cd, 2, &ft_putint);
+	if (default_term(cp_term) == -1)
+		return ;
 	signal(SIGTSTP, SIG_DFL);
 	ioctl(0, TIOCSTI, "\032");
 	signal(SIGCONT, &cont);

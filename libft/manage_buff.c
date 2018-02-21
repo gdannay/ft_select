@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/13 10:00:11 by gdannay           #+#    #+#             */
-/*   Updated: 2017/12/13 19:04:26 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/21 19:39:14 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int		print_buff(char *buff)
 	length = (int)ft_strlen(buff);
 	if (length == 0)
 		return (0);
-	write(1, buff, (size_t)length);
+	write(2, buff, (size_t)length);
 	while (buff && buff[i])
 	{
 		buff[i] = '\0';
@@ -119,7 +119,7 @@ int		manage_buff(char *buff, char *str, size_t length)
 		l = print_buff(buff);
 		if (BUFF_SIZE <= length)
 		{
-			write(1, str, length);
+			write(2, str, length);
 			return (l + (int)length);
 		}
 		else

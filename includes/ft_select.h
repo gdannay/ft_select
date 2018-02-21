@@ -6,22 +6,23 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 14:54:28 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/21 11:39:41 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/02/21 19:58:39 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SELECT
-# define FT_SELECT
+#ifndef FT_SELECT_H
+# define FT_SELECT_H
 
-#include <stdio.h>
-#include <term.h>
-#include <stdlib.h>
-#include <termios.h>
-#include <unistd.h>
-#include <curses.h>
-#include <sys/ioctl.h>
-#include <signal.h>
-#include "../libft/libft.h"
+# include <stdio.h>
+# include <term.h>
+# include <stdlib.h>
+# include <termios.h>
+# include <unistd.h>
+# include <curses.h>
+# include <sys/ioctl.h>
+# include <signal.h>
+# include <fcntl.h>
+# include "../libft/libft.h"
 
 # define UP 'A'
 # define DOWN 'B'
@@ -50,7 +51,7 @@ typedef struct	s_term
 	int				prec;
 	int				line;
 	struct winsize	size;
-	struct termios	origin;
+	struct termios	*origin;
 	int				key;
 }				t_term;
 
@@ -68,5 +69,6 @@ void				free_term(t_term *term);
 void				space(t_term *term);
 void				del(t_term *term);
 void				arrow(t_term *term);
+void				get_precision(t_term *term);
 
 #endif

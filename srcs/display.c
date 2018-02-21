@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   display.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: gdannay <marvin@42 .fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/19 20:33:51 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/21 11:55:43 by gdannay          ###   ########.fr       */
+/*   Created: 2 018/01/19 2 0:33:51 by gdannay           #+#    #+#             */
+/*   Updated: 2018/02/21 19:36:11 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_select.h"
-
-static void	get_precision(t_term *term)
-{
-	int i;
-
-	i = -1;
-	term->prec = 0;
-	while (term->arg[++i].name)
-		term->prec = term->prec < (int)ft_strlen(term->arg[i].name)
-			? (int)ft_strlen(term->arg[i].name) : term->prec;
-	term->prec = term->prec + 1;
-}
 
 static void	display_highlight(t_term *term, int i)
 {
@@ -80,25 +68,39 @@ static void	display_normal(t_term *term, int i)
 
 static void	manage_display(t_term *term, int i, int *tmp)
 {
-	if (i + 1 > *tmp && i != 0)
+	if (*tmp >= term->elem)
 	{
 		ft_printf("\n");
-		*tmp = *tmp + term->elem;
+		*tmp = 0;
 		term->line = term->line + 1;
-	}
-	if (term->line > term->size.ws_row - 2)
-	{
-		i -= 2;
-		while (term->arg[++i].name)
-			term->arg[i].last = 1;
-		ft_printf("...");
-		*tmp = -1;
 	}
 	if (term->arg[i].high == 1)
 		display_highlight(term, i);
 	else
 		display_normal(term, i);
+	*tmp = *tmp + 1;
 	term->arg[i].last = 0;
+}
+
+static int	check_space_term(t_term *term)
+{
+	int		high;
+	int		part;
+	int		i;
+
+	high = 0;
+	part = 0;
+	get_precision(term);
+	if ((term->elem = (term->size.ws_col - 10) / term->prec) == 0)
+		term->elem = 1;
+	while (term->arg[high].name && term->arg[high].high == 0)
+		high++;
+	while (part * (term->size.ws_row - 1) * term->elem < high + 1)
+		part++;
+	i = (part - 1) * (term->size.ws_row - 1) * term->elem - 1;
+	if (i + term->size.ws_row * term->elem < term->nb)
+		term->arg[i + (term->size.ws_row - 1) * term->elem + 1].last = 1;
+	return (i);
 }
 
 void		print_args(t_term *term)
@@ -109,19 +111,21 @@ void		print_args(t_term *term)
 	char	*cr;
 	char	*cd;
 
-	i = -1;
 	term->line = 1;
 	up = tgetstr("up", NULL);
 	cr = tgetstr("cr", NULL);
 	cd = tgetstr("cd", NULL);
-	get_precision(term);
-	term->elem = (term->size.ws_col - 10) / term->prec;
-	tmp = term->elem;
-	tputs(cd, 1, &ft_putint);
-	while (tmp != -1 && term->arg[++i].name)
+	tmp = 0;
+	tputs(cd, 2, &ft_putint);
+	i = check_space_term(term);
+	while (term->arg[++i].name && term->arg[i].last == 0)
 		manage_display(term, i, &tmp);
+	i = -1;
+	while (term->arg[++i].name)
+		term->arg[i].last = 0;
+	term->arg[i].last = 1;
 	i = 0;
 	while (++i < term->line)
-		tputs(up, 1, &ft_putint);
-	tputs(cr, 1, &ft_putint);
+		tputs(up, 2, &ft_putint);
+	tputs(cr, 2, &ft_putint);
 }
