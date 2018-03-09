@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 14:54:28 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/21 19:58:39 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/03/09 11:50:44 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@
 # define SPACE 32
 # define DEL 127
 
-typedef struct	s_arg
+typedef struct		s_arg
 {
-	char		*name;
-	int			select;
-	int			high;
-	int			last;
-}				t_arg;
+	char			*name;
+	int				select;
+	int				high;
+	int				last;
+}					t_arg;
 
-typedef struct	s_term
+typedef struct		s_term
 {
 	char			*name;
 	t_arg			*arg;
@@ -53,7 +53,7 @@ typedef struct	s_term
 	struct winsize	size;
 	struct termios	*origin;
 	int				key;
-}				t_term;
+}					t_term;
 
 t_arg				*ft_select(t_term *term);
 int					init_arg(int ac, char **av, t_term *term);
