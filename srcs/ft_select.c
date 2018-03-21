@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 18:20:45 by gdannay           #+#    #+#             */
-/*   Updated: 2018/03/09 11:53:02 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/03/21 20:02:16 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,11 @@ int				main(int ac, char **av)
 				|| init_term(term) == -1
 				|| !(init_arg(ac, av, term)))
 			return (-1);
-		while (term->key != ECHAP && term->key != ENTER)
+		while (term->key != ECHAP && term->key != ENTER
+				&& term->arg->name)
 			manage_keys(term);
-		output(term);
+		if (term->key == ENTER)
+			output(term);
 		default_term(term);
 		free_term(term);
 	}
