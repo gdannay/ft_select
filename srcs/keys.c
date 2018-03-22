@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/21 10:07:13 by gdannay           #+#    #+#             */
-/*   Updated: 2018/03/21 19:54:09 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/03/22 14:39:33 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,17 @@ void		arrow(t_term *term)
 	i = 0;
 	while (term->arg[i].name && term->arg[i].high == 0)
 		i++;
+	term->arg[i].high = 0;
 	ft_getch();
 	if ((term->key = ft_getch()) == UP || term->key == DOWN)
 		arrow_up_down(term, i);
 	else if (term->key == RIGHT || term->key == LEFT)
 		arrow_left_right(term, i);
+	else if (term->key == BACK)
+	{
+		del(term);
+		return ;
+	}
 	else
 		term->key = 1;
-	term->arg[i].high = 0;
 }

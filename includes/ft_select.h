@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/19 14:54:28 by gdannay           #+#    #+#             */
-/*   Updated: 2018/03/09 11:50:44 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/03/22 10:22:18 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define LEFT 'D'
 # define ECHAP 1
 # define ENTER 10
+# define BACK 51
 # define ARROW 27
 # define SPACE 32
 # define DEL 127

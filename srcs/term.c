@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/16 10:03:59 by gdannay           #+#    #+#             */
-/*   Updated: 2018/03/21 20:03:45 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/03/22 14:30:06 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int		init_term(t_term *term)
 	struct termios	canon;
 
 	if (!(term->name = getenv("TERM"))
+		|| ft_strlen(term->name) == 0
 		|| tgetent(NULL, term->name) == -1
 		|| tcgetattr(0, &canon) == -1
 		|| !(term->origin = (struct termios *)malloc(sizeof(struct termios)))
