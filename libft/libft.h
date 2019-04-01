@@ -6,7 +6,7 @@
 /*   By: gdannay <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/13 14:37:27 by gdannay           #+#    #+#             */
-/*   Updated: 2018/02/21 19:37:49 by gdannay          ###   ########.fr       */
+/*   Updated: 2018/01/17 10:50:30 by gdannay          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void					ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void					ft_lstdelone(t_list **alst,
 						void (*del)(void *, size_t));
 void					ft_lstiter(t_list *lst, void (*f)(t_list *elem));
-void					ft_puttab(char **tableau);
+void					ft_puttab(char **tab);
 void					ft_lstappend(t_list **alst, t_list *new);
 char					*ft_capitalize(char *s);
 char					*ft_lowercase(char *s);
@@ -173,7 +173,7 @@ int						add_char_right(char *buff, char c,
 int						add_char_left(char *buff, char c,
 						int *index, size_t length);
 char					*ft_joinpath(char *dir, char *name);
-char					**ft_tabdup(char **tableau);
+char					**ft_tabdup(char **tab);
 char					*ft_joinwchar(char *dir, char *name, char c);
 char					**ft_strsplitspace(char const *s);
 char					**ft_tabjoin(char **s1, char **s2);
@@ -183,6 +183,6 @@ char					*ft_strjoinwq(char *s1, char *s2, char quote);
 char					*ft_strdupwq(char *s, char quote);
 char					*ft_strndupwq(const char *s, size_t n);
 long					ft_atol(const char *nbr);
-void					ft_tabdel(char ***tableau);
+void					ft_tabdel(char ***tab);
 
 #endif

@@ -19,7 +19,7 @@ void	ft_puttab(char **tab)
 
 	i = 0;
 	j = 0;
-	while (tab[i] != '\0')
+	while (tab[i])
 	{
 		while (tab[i][j] != '\0')
 		{
