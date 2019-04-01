@@ -124,7 +124,7 @@ void					ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void					ft_lstdelone(t_list **alst,
 						void (*del)(void *, size_t));
 void					ft_lstiter(t_list *lst, void (*f)(t_list *elem));
-void					ft_puttab(char **tab);
+void					ft_puttab(char **tabl);
 void					ft_lstappend(t_list **alst, t_list *new);
 char					*ft_capitalize(char *s);
 char					*ft_lowercase(char *s);
@@ -173,7 +173,7 @@ int						add_char_right(char *buff, char c,
 int						add_char_left(char *buff, char c,
 						int *index, size_t length);
 char					*ft_joinpath(char *dir, char *name);
-char					**ft_tabdup(char **tab);
+char					**ft_tabdup(char **tabl);
 char					*ft_joinwchar(char *dir, char *name, char c);
 char					**ft_strsplitspace(char const *s);
 char					**ft_tabjoin(char **s1, char **s2);
@@ -183,6 +183,6 @@ char					*ft_strjoinwq(char *s1, char *s2, char quote);
 char					*ft_strdupwq(char *s, char quote);
 char					*ft_strndupwq(const char *s, size_t n);
 long					ft_atol(const char *nbr);
-void					ft_tabdel(char ***tab);
+void					ft_tabdel(char ***tabl);
 
 #endif

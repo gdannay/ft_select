@@ -20,7 +20,7 @@ SRCS	=	srcs/ft_select.c		\
 
 OBJS	=	$(SRCS:.c=.o)
 
-CFLAGS	=	-Wall -Wextra -Werror -I includes
+CFLAGS	=	-Wall -Werror -Wextra -I includes
 
 LFLAGS	=	-L libft -lft -ltermcap
 
